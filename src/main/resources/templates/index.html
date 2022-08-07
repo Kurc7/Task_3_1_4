@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+            integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
+            crossorigin="anonymous"></script>
+    <style>
+        html {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg  bg-dark navbar-dark">
+    <!--растягиваем контейнер на всю страницу-->
+    <div class="container-fluid">
+        <!--группировка для меню-->
+        <div class="navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="m-1 nav-item">
+                    <a class="text-white font-weight-bold" id="personEmailHead"></a>
+                </li>
+                <li class="m-1 nav-item">
+                    <a class="text-white">with roles:</a>
+                </li>
+                <li class="m-1 nav-item">
+                    <a class="text-white font-weight-bold" id="personRolesHead"></a>
+                </li>
+            </ul>
+            <!-- __ , расположение слева-->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav><!--Шапка (Конец)-->
+<!--Тело-->
+<div class="row mt-0 vh-100 mr-0">
+    <div class="col-md-12 mt-0 pl-0 pr-0">
+        <div class="container-fluid h-100">
+            <div class="row h-100">
+                <!--Блок с лева (отображение выборки интерфейсов для ролей USER или ADMIN), соотношение 3 от 12 по сетке (Начало)-->
+                <div class="col-2 bg-white mt-2  pr-0 pt-0"><!--цвет фона, отступы-->
+                    <!--Роль ADMIN-->                                <!--столбик, выделение-->
+                    <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+                        <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+                            aria-controls="v-pills-home" aria-selected="true" sec:authorize="hasRole('ADMIN')">Admin</a>
+                        <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile"
+                           role="tab" aria-controls="v-pills-profile" aria-selected="false"
+                           sec:authorize="hasAnyRole('USER')">User</a>
+                    </div>
+                </div>
+                <!--Блок с лева (отображение выборки интерфейсов для ролей USER или ADMIN), соотношение 3 от 12 по сетке (Начало)-->
+                <!--Блок с Права соотношение 9 от 12 по сетке (Начало)-->
+                <div class="col-10  bg-light pr-0 pt-0">
+                    <div class="tab-content" id="v-pills-tabContent">
+                        <!--Блок, который отображает либо информации о пользователе, либо панели администратора (Начало)-->
+                        <div class="tab-pane" id="v-pills-home" role="tabpanel"
+                             aria-labelledby="v-pills-home-tab" sec:authorize="hasAnyRole('ADMIN')">
+                            <div class="row  pl-3 pr-8 mr-0">
+                                <h2>Admin panel</h2>
+                            </div>
+                            <div class="bg-light border-0 pr-4">
+                                <!--Блок, который отображает либо информация обо всех пользователях, либо панель добавления нового пользователя (Начало)-->
+                                <div>
+                                    <ul class="nav nav-tabs p-0">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="descriptionTab" data-toggle="tab"
+                                               href="#description">Users
+                                                table</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="addnewuserTab" data-toggle="tab" href="#addnewuser">New
+                                                User</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--Блок, который отображает либо информация обо всех пользователях, либо панель добавления нового пользователя (Конец)-->
+                                <div class="tab-content bg-light border"><!--делаем вкладку переключаемой-->
+                                    <!--Блок отображающий панель администратора, Начало-->
+                                    <div class="tab-pane fade show active" id="description">
+                                        <!--Список пользователей, Начало (fade эффект перехода, отображая админку, убираем пользовательский интерфейс)-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="d-block p-2 bg-light border-bottom">
+                                                    <h4 class="m-2">All users</h4>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="container-fluid d-flex h-100 justify-content-center align-items-center p-0 bg-white pt-4">
+                                            <div class="col-md-12 pr-3 pl-3">
+                                                <!--строки разных цветов, состояние наведения-->
+                                                <table class="table table-striped table-hover pb-2 pt-1">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>First name</th>
+                                                        <th>Last name</th>
+                                                        <th>Age</th>
+                                                        <th>Email</th>
+                                                        <th>Role</th>
+                                                        <th>Edit</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody class="admin_table_users">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div><!--Таблица пользователей, Конец-->
+                                    </div><!--Блок отображающий панель администратора, Конец-->
+                                    <!--Блок добавления нового пользователя, Начало-->
+                                    <div class="tab-pane fade " id="addnewuser">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="d-block p-2 bg-light border-bottom">
+                                                    <h4 class="m-2">Add user</h4>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!--Расположение по центру-->
+                                        <div class="container-fluid d-flex h-100 justify-content-center align-items-center p-0 bg-white pr-1 pt-4">
+                                            <div class="row pt-1 pr-" style="width: 300px;">
+                                                <div class="col-md-12 pr-3 pt-0 pl-0"
+                                                     style="overflow: auto; overflow-y: hidden;" id="createUser">
+                                                    <!--                                                    <form method="post" action="/api/save" modelAttribute="user">-->
+                                                    <div class="form-group">
+                                                        <p class="m-0 text-center"><b>First name</b></p>
+                                                        <input class="form-control" id="createName"
+                                                               required="required" name="createName"
+                                                               placeholder="Enter name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <p class="m-0 text-center"><b>Last name</b></p>
+                                                        <input class="form-control" id="createLastName"
+                                                               required="required" name="createLastName"
+                                                               placeholder="Enter lastname">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <p class="m-0 text-center"><b>Age</b></p>
+                                                        <input type="number" class="form-control" id="createAge"
+                                                               required="required" name="createAge"
+                                                               placeholder="Enter age">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <p class="m-0 text-center"><b>Email</b></p>
+                                                        <input type="email" class="form-control" name="createEmail"
+                                                               id="createEmail" required="required"
+                                                               placeholder="Enter email">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <p class="m-0 text-center"><b>Password</b></p>
+                                                        <input class="form-control" name="createPassword"
+                                                               id="createPassword" required="required"
+                                                               placeholder="Enter password">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <p class="m-0 text-center"><b>Role</b></p>
+                                                        <select multiple class="form-control" id="createRoles"
+                                                                required="required" name="createRoles"
+                                                                placeholder="Choose Role" size="2">
+                                                            <!--JS injection-->
+                                                        </select>
+                                                    </div>
+                                                    <div class="text-center pb-3">
+                                                        <button class="btn btn-success buttonCreate">
+                                                            Add new
+                                                            user
+                                                        </button>
+                                                    </div>
+                                                    <!--                                                    </form>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!--Блок добавления нового пользователя, Конец-->
+                                </div>
+                            </div>
+                        </div>
+                        <!--Блок, который отображает либо информации о пользователе, либо панели администратора (конец)-->
+                        <!--Пользовательский интерфейс для админа, начало-->
+                        <div class="tab-pane active tab-pane" id="v-pills-profile" role="tabpanel"
+                             aria-labelledby="v-pills-profile-tab" sec:authorize="hasAnyRole('USER')">
+                            <!--Блок заголовок для пользователя с ролью USER-->
+                            <div class="row  pl-3 pr-8 mr-0">
+                                <h2>User information page</h2>
+                            </div>
+                            <div class="bg-light border">
+                                <div class="col-md-12  pl-0 pr-0">
+                                <span class="d-block bg-light border-top">
+                                      <h4 class="card-header">About user</h4>
+                                </span>
+                                    <div class="container-fluid d-flex h-100 justify-content-center align-items-center p-0 bg-white pr-1 pt-4">
+                                        <div class="col-md-12 pr-3 pl-3">
+                                            <table class="table table-striped table-hover pb-2 pt-1">
+                                                <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>First name</th>
+                                                    <th>Last name</th>
+                                                    <th>Age</th>
+                                                    <th>Email</th>
+                                                    <th>Role</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <th id="personID" style="vertical-align: middle">
+                                                    </th>
+                                                    <th id="personFirstName"
+                                                        style="vertical-align: middle">
+                                                    </th>
+                                                    <th id="personLastName"
+                                                        style="vertical-align: middle">
+                                                    </th>
+                                                    <th id="personAge" style="vertical-align: middle">
+                                                    </th>
+                                                    <th id="personEmail" style="vertical-align: middle">
+                                                    </th>
+                                                    <th id="personRoles" style="vertical-align: middle">
+                                                    </th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Пользовательский интерфейс для админа, Конец-->
+                    </div>
+                </div>
+                <!--Блок с Права соотношение 9 от 12 по сетке (Конец)-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--Модальные окна EDIT и DELETE-->
+<div sec:authorize="hasRole('ADMIN')">
+    <div id="modal-edit" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit user</h5>
+                    <button type="button" data-dismiss="model" class="close"><h4 class="close" data-dismiss="modal">
+                        x</h4></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid d-flex h-100 justify-content-center align-items-center">
+                        <div class="row bg-white" style="width: 300px;">
+                            <div class="col rounded p-0">
+                                <div id="editUser">
+                                    <form name="editUser" action="">
+                                        <div class="form-group">
+                                            <p class="m-0 text-center"><b>ID</b></p>
+                                            <input type="hidden" id="IdHidden_edit" name="id_edit" readonly>
+                                            <input type="number" class="form-control" id="id_edit" placeholder="ID"
+                                                   disabled="disabled" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <p class="m-0 text-center"><b>First name</b></p>
+                                            <input class="form-control" id="firstname_edit" required="required"
+                                                   name="firstname_edit" placeholder="Enter name">
+                                        </div>
+                                        <div class="form-group">
+                                            <p class="m-0 text-center"><b>Lastname</b></p>
+                                            <input class="form-control" id="lastname_edit" required="required"
+                                                   name="lastname_edit" placeholder="Enter lastname ">
+                                        </div>
+                                        <div class="form-group">
+                                            <p class="m-0 text-center"><b>Age</b></p>
+                                            <input type="number" name="age_edit" class="form-control" id="age_edit"
+                                                   required="required" placeholder="Enter age">
+                                        </div>
+                                        <div class="form-group">
+                                            <p class="m-0 text-center"><b>Email</b></p>
+                                            <input type="email" name="email_edit" class="form-control" id="email_edit"
+                                                   required="required" placeholder="Enter email">
+                                        </div>
+                                        <div class="form-group">
+                                            <p class="m-0 text-center"><b>Password</b></p>
+                                            <input name="password_edit" class="form-control" id="password_edit"
+                                                   placeholder="Enter password">
+                                        </div>
+                                        <div class="form-group">
+                                            <p class="m-0 text-center"><b>Role</b></p>
+                                            <select multiple class="form-control" id="role_edit"
+                                                    placeholder="Choose Role" size="2" name="role_edit"> </select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="close" class="btn btn-secondary " data-dismiss="modal">Close
+                                            </button>
+                                            <button type="close" class="btn btn-primary" data-dismiss="modal"
+                                                    onclick="buttonEditModal()">Edit
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-delete" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete user</h5>
+                    <button type="button" data-dismiss="model" class="close"><h4 class="close" data-dismiss="modal">
+                        x</h4></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid d-flex h-100 justify-content-center align-items-center">
+                        <div class="row bg-white" style="width: 300px;">
+                            <div class="col rounded p-0">
+                                <div id="deleteform">
+                                    <div class="form-group">
+                                        <p class="m-0 text-center"><b>ID</b></p>
+                                        <input type="hidden" id="IdHidden_delete" name="id" readonly>
+                                        <input type="number" class="form-control" id="id_delete" placeholder="ID"
+                                               disabled="disabled" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="m-0 text-center"><b>First name</b></p>
+                                        <input class="form-control" id="firstname_delete" required="required"
+                                               name="name" placeholder="Enter name" disabled="disabled" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="m-0 text-center"><b>Lastname</b></p>
+                                        <input class="form-control" id="lastname_delete" required="required"
+                                               name="surname" placeholder="Enter lastname" disabled="disabled" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="m-0 text-center"><b>Age</b></p>
+                                        <input type="number" name="age" class="form-control" id="age_delete"
+                                               required="required" placeholder="Enter age" disabled="disabled" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="m-0 text-center"><b>Email</b></p>
+                                        <input type="email" name="email" class="form-control" id="email_delete"
+                                               required="required" placeholder="Enter email" disabled="disabled"
+                                               readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="m-0 text-center"><b>Password</b></p>
+                                        <input name="password" class="form-control" id="password_delete"
+                                               placeholder="Enter password" disabled="disabled" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="m-0 text-center"><b>Role</b></p>
+                                        <select multiple class="form-control" id="role_delete"
+                                                placeholder="Choose Role" size="2" name="roles" disabled="disabled"
+                                                readonly> </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="close" class="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="close" class="btn btn-primary" data-dismiss="modal"
+                                                onclick="buttonDeleteModal()">Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    //Заполняем все поля пользователя который авторизовался в не зависимости от роли
+    getPerson('person');
+
+    async function getPerson(api) {
+        let result = await fetch('http://localhost:8080/api/' + api);
+        if (result.ok) {
+            let person = await result.json();
+            $('#personEmailHead').text(person.email);
+            $('#personRolesHead').text(getRolesOfUser(person.roles));
+            $('#personID').text(person.id);
+            $('#personFirstName').text(person.name);
+            $('#personLastName').text(person.lastname);
+            $('#personAge').text(person.age);
+            $('#personEmail').text(person.email);
+            $('#personRoles').text(getRolesOfUser(person.roles));
+        } else {
+            console.log('Fail connect to api');
+        }
+    }
+
+    //получение ролей
+    function getRolesOfUser(arrRoles) {
+        let roles = ""
+        for (let i = 0; i < arrRoles.length; i++) {
+            roles += arrRoles[i].name.replace("ROLE_", "") + " ";
+        }
+        return roles;
+    }
+
+</script>
+<script sec:authorize="hasRole('ADMIN')">
+    //перехожим на вкладку Admin
+    document.getElementById('v-pills-home-tab').click();
+
+    //инициализируем переменную таблицы пользователей
+    let admTable = document.getElementsByClassName('admin_table_users')[0];
+
+    //заполняем таблицу пользователей, записываем всех юзеров в глобальную переменную
+    let allUsers;
+    getDate('users', 'getAllUsers', null);
+
+    //Запрашиваем роли и заполняем формы select для ролей в модальные окна и форму нового пользователя
+    let newRoles;
+    getRoles();
+
+    //Запрашиваем объект нового пользователя
+    let newUser;
+    getDate('users', 'new', null);
+
+
+    async function getDate(api, mode, id_user) {
+        if (mode === 'getAllUsers') {
+            let result = await fetch('http://localhost:8080/api/' + api);
+            let html = '';
+            let option = ["id", "name", "lastname", "age", "email", "roles"];
+            if (result.ok) {
+                let result_json = await result.json();
+                allUsers = result_json;
+                for (let key in result_json) {
+                    html += '<tr>';
+                    for (let i = 0; i < option.length; i++) {
+                        if (option[i] === 'roles') {
+                            html += '<th style="vertical-align: middle">' + getRolesOfUser(result_json[key][option[i]]) + '</th>';
+                        } else {
+                            html += '<th style="vertical-align: middle">' + result_json[key][option[i]] + '</th>';
+                        }
+                    }
+                    html +=
+                        '<th><button type="button" class="btn btn-info" id = "' + result_json[key].id + '" ' +
+                        'data-toggle="modal" data-target="#modal-edit"  onclick="activeModalEdit(' + result_json[key].id + ')">Edit</button></th>' +
+                        '<th><button type="button" class="btn btn-danger" id = "' + result_json[key].id + '" ' +
+                        'data-toggle="modal" data-target="#modal-delete" onclick="activeModalDelete(' + result_json[key].id + ')">Delete</th></tr>';
+                }
+                admTable.innerHTML = html;
+            } else {
+                console.log('Fail connect to api');
+            }
+        } else if (mode === 'new') {
+            let result = await fetch('http://localhost:8080/api/' + mode);
+            if (result.ok) {
+                newUser = await result.json();
+            } else {
+                console.log('Fail connect to api');
+            }
+        } else if ((mode === 'edit' || mode === 'delete') && id_user != null) {
+            let user;
+            for (let i = 0; i < allUsers.length; i++) {
+                if (allUsers[i].id == id_user) {
+                    user = allUsers[i];
+                }
+            }
+            let id = document.getElementById('id_' + mode);
+            id.value = user.id;
+            let name = document.getElementById('firstname_' + mode);
+            name.value = user.name;
+            let lastname = document.getElementById('lastname_' + mode);
+            lastname.value = user.lastname;
+            let age = document.getElementById('age_' + mode);
+            age.value = user.age;
+            let email = document.getElementById('email_' + mode);
+            email.value = user.email;
+        }
+    }
+
+    async function getRoles() {
+        let roles = await fetch('http://localhost:8080/api/allroles');
+        if (roles.ok) {
+            let html = '';
+            let result_json = await roles.json();
+            newRoles = result_json;
+            for (let i = 0; i < newRoles.length; i++) {
+                html += '<option value="' + result_json[i].name + '">' + result_json[i].name + '</option>';
+            }
+            $('#createRoles').html(html)
+            $('#role_edit').html(html)
+            $('#role_delete').html(html)
+        } else {
+            console.log('Fail connect to api');
+        }
+    }
+
+    //Инициируем заполнение формы модального окна по нажатию кнопки edit
+    function activeModalEdit(id) {
+        getDate('user', 'edit', id);
+    }
+
+    //Инициируем заполнение формы модального окна по нажатию кнопки delete
+    function activeModalDelete(id) {
+        getDate('user', 'delete', id);
+    }
+
+    //обновляем user
+    async function buttonEditModal() {
+        let id_user = $("input#id_edit").val();
+        //находим пользователя в массиве всех пользователей
+        let user;
+        for (let i = 0; i < allUsers.length; i++) {
+            if (allUsers[i].id == id_user) {
+                user = allUsers[i];
+            }
+        }
+        let firstName = $("input#firstname_edit").val();
+        if (firstName != null && firstName != '') {
+            user.name = firstName;
+        }
+        user.lastname = $("input#lastname_edit").val();
+        user.email = $("input#email_edit").val();
+        user.age = $("input#age_edit").val() * 1;
+        let pass = $("input#password_edit").val();
+        if (pass != null && pass != '') {
+            user.password = pass;
+        }
+        //записываем роли
+        let selectRoles = $("select#role_edit").val();
+        user.roles = [];
+        user.authorities = [];
+        for (let i = 0; i < newRoles.length; i++) {
+            for (let selectRole of selectRoles) {
+                if (newRoles[i].name == selectRole) {
+                    user.roles.push(newRoles[i]);
+                }
+            }
+        }
+        await fetch('http://localhost:8080/api/edit', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(user)
+        });
+        await getDate('users', 'getAllUsers', null)
+    }
+
+    //удаляем user
+    async function buttonDeleteModal() {
+        let id = $("input#id_delete").val();
+        await fetch('http://localhost:8080/api/' + id, {
+            method: 'DELETE'
+        });
+        await getDate('users', 'getAllUsers', null)
+    }
+
+    //создаем нового user
+    $(function () {
+        $(".buttonCreate").click(async function () {
+            newUser.name = $("input#createName").val();
+            newUser.lastname = $("input#createLastName").val();
+            newUser.email = $("input#createEmail").val();
+            newUser.age = $("input#createAge").val();
+            newUser.password = $("input#createPassword").val();
+            //записываем роли
+            let selectRoles = $("select#createRoles").val();
+            newUser.roles = [];
+            for (let i = 0; i < newRoles.length; i++) {
+                for (let selectRole of selectRoles) {
+                    if (newRoles[i].name === selectRole) {
+                        newUser.roles.push(newRoles[i]);
+                    }
+                }
+            }
+            await fetch('http://localhost:8080/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(newUser)
+            });
+
+            await getDate('users', 'getAllUsers', null)
+            document.getElementById('descriptionTab').click();
+        });
+    });
+</script>
+</body>
+</html>
